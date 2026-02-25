@@ -2,7 +2,9 @@ import "package:flow/data/money.dart";
 import "package:flow/entity/transaction/type.dart";
 import "package:flow/services/user_preferences.dart";
 import "package:flow/utils/loose_parsers.dart";
+import "package:flow/utils/money_parsing.dart";
 import "package:flow/utils/utils.dart";
+import "package:uuid/uuid.dart";
 
 class TransactionProgrammableObject {
   final String? title;
@@ -129,6 +131,39 @@ class TransactionProgrammableObject {
   static TransactionProgrammableObject? tryParse(Map<String, dynamic> params) {
     try {
       return parse(params);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  static TransactionProgrammableObject? fromSiriJson(Map json) {
+    try {
+      if (json["fromAccount"] case String account) {
+        if (Uuid.isValidUUID(fromString: account)) {
+          json["fromAccountUuid"] = account;
+          json["fromAccount"] = null;
+        }
+      }
+
+      if (json["category"] case String category) {
+        if (Uuid.isValidUUID(fromString: category)) {
+          json["categoryUuid"] = category;
+          json["category"] = null;
+        }
+      }
+
+      if (json["amount"] case num amount) {
+        json["amount"] = -(amount.toDouble().abs());
+      }
+
+      if (json["amount"] case String amountString) {
+        final double? amount = parseMoneyString(text: amountString);
+        if (amount != null) {
+          json["amount"] = -(amount.abs());
+        }
+      }
+
+      return parse(json.cast<String, dynamic>());
     } catch (e) {
       return null;
     }

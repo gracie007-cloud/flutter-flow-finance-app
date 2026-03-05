@@ -1,10 +1,25 @@
 # Changelog
 
+## Next
+
+### Fixes
+
+* Past pending transactions now always show up to avoid missing payments
+
+### Changes
+
+* Renovated multi account/category sheets
+
 ## 0.19.1
+
+### Changes
+
+* Now it's possible to create category while adding a transaction, credits to [@r4khul](https://github.com/r4khul)
 
 ### Fixes
 
 * Fixed "Add an expense" Siri Shortcut struggling with non-US formatted numbers
+* Other minor fixes
 
 ## 0.19.0
 
